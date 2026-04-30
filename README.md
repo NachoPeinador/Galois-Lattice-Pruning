@@ -119,12 +119,9 @@ If this Galois pruning mechanism, the Meet-in-the-Middle (MitM) C++ architecture
 ```
 **APA:**
 
-> Peinador Sala, J. I. (2026). *Explicit Hermitian Hamiltonian for the Riemann Zeros: Arithmetic Quantum Chaos and Multifractality from Z/6Z*. Zenodo. https://doi.org/10.5281/zenodo.19920083
-
+> Peinador Sala, J. I. (2026). Galois Invariants in Cyclotomic Lattice Enumeration: Deterministic Collapse of the SVP Search Space via Modular Projection Pruning (Version v1). Zenodo. https://doi.org/10.5281/zenodo.19920083
 
 </details>
-
----
 
 ---
 
