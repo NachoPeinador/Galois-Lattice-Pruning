@@ -62,3 +62,9 @@ If you find this code or research useful in your work, please cite our paper:
   publisher={Springer Nature},
   note={Under Review}
 }
+```
+
+## ✉️ Contact
+José Ignacio Peinador Sala - Independent Researcher
+Email: joseignacio.peinador@gmail.com
+ORCID: 0000-0002-1825-0097
