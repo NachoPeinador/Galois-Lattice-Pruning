@@ -49,22 +49,41 @@ If you prefer to run it locally on a Linux environment, ensure you have:
 2. Run all cells sequentially.
 3. The C++ engine will compile, and the experiment will execute, replicating the exact dimensional collapse table shown above.
 
-## 📖 Citation
+---
 
-If you find this code or research useful in your work, please cite our paper:
+## ⚖️ Licensing
+
+This repository operates under a **Dual License** model to protect the non-commercial nature of the research while encouraging open academic collaboration:
+
+1. **Code & Software (`Notebooks/`, `/src/` and scripts):**
+   Released under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0). 
+   *You are free to use, modify, and share the code for academic, personal, or educational purposes. Any commercial use, monetization, or integration into proprietary paid software is strictly prohibited.*
+
+2. **Manuscripts & Visual Assets (`Papers/` and `Images/`):**
+   Released under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+   *You are free to share and adapt the theoretical text and graphics for non-commercial purposes, provided you give appropriate credit and distribute your contributions under the exact same license.*
+
+---
+
+## 📝 Citation
+
+<details>
+<summary><strong>👇 Click to view Citation details</strong></summary>
+
+If this Galois pruning mechanism, the Meet-in-the-Middle (MitM) C++ architecture, or the Law of Oracle Independence ($|\Omega_{conf}| \approx \frac{|\Omega|}{\prod p_i}$) assists in your research, please cite the corresponding manuscript:
+
+**BibTeX:**
 
 ```bibtex
 @article{peinador2026galois,
-  title={Galois Invariants in Cyclotomic Lattice Enumeration: Deterministic Collapse of the SVP Search Space via Modular Projection Pruning},
-  author={Peinador Sala, Jos{\'e} Ignacio},
-  journal={SEMA Journal},
-  year={2026},
-  publisher={Springer Nature},
-  note={Under Review}
+  author = {Peinador Sala, Jos{\'e} Ignacio},
+  title = {Galois Invariants in Cyclotomic Lattice Enumeration: Deterministic Collapse of the SVP Search Space via Modular Projection Pruning},
+  journal = {SEMA Journal},
+  year = {2026},
+  note = {Under Review},
+  url = {[https://github.com/NachoPeinador/Galois-Lattice-Pruning](https://github.com/NachoPeinador/Galois-Lattice-Pruning)}
 }
-```
 
-## ✉️ Contact
-José Ignacio Peinador Sala - Independent Researcher
-Email: joseignacio.peinador@gmail.com
-ORCID: 0000-0002-1825-0097
+</details>
+
+---
