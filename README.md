@@ -26,6 +26,12 @@ Official code repository and supplementary material for the paper **"Galois Inva
 * 📉 **Deterministic Collapse:** Demonstrated an exact $>99.99999\%$ node elision for dimension $d=32$ with $k=5$ parallel oracles, suppressing $1.8 \times 10^{15}$ leaves down to exactly $157,517$ viable paths.
 * 🎯 **Perfect Empirical Alignment:** The C++ execution perfectly matches the theoretical algebraic divisor equation. Verified invariance via rigorous control experiments with coprime sets (e.g., $\{17, 19, 23, 29, 31\}$).
 
+<p align="center">
+  <img src="Images/search_space_collapse.png" alt="Deterministic Search Space Collapse via Galois Pruning" width="100%">
+  <br>
+  <em>Figure 1. Deterministic collapse of the LWE search space in dimension d=32. The empirical results (red points) obtained via the C++ MitM engine perfectly align with the theoretical Law of Oracle Independence (dashed line).</em>
+</p>
+
 ### 💡 **Key Concept**
 
 > The Shortest Vector Problem (SVP) in structured lattices is not exclusively a geometric challenge. The injected LWE noise—assumed by current security models to be uniformly random—is topologically confined by the discrete algebraic ideals of Galois fields. This arithmetic superselection induces a deterministic collapse of the search space, strongly suggesting that the true asymptotic complexity of Post-Quantum standards like ML-KEM resides in sub-exponential bounds.
