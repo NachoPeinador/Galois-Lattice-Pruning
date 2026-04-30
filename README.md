@@ -5,7 +5,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19284511.svg)](https://doi.org/10.5281/zenodo.19284511)
 [![ORCID](https://img.shields.io/badge/ORCID-0009--0008--1822--3452-A6CE39?style=flat&logo=orcid&logoColor=white)](https://orcid.org/0009-0008-1822-3452)
 [![X](https://img.shields.io/badge/X-%40todos__lumpen-000000?style=flat&logo=x&logoColor=white)](https://twitter.com/todos_lumpen)
-[![Papers](https://img.shields.io/badge/Paper-Read_PDF-B31B1B?style=flat&logo=latex&logoColor=white)](https://github.com/NachoPeinador/Z6Z-Riemann-Spectrum/blob/main/Paper/Z6Z_Modular_Quantum_Chaos.pdf)
+[![Papers](https://img.shields.io/badge/Paper-Read_PDF-B31B1B?style=flat&logo=latex&logoColor=white)](https://github.com/NachoPeinador/Galois-Lattice-Pruning/blob/main/Paper/Galois_Invariants_in_Cyclotomic_Lattice_Enumeration.pdf)
 
 Official code repository and supplementary material for the paper **"Galois Invariants in Cyclotomic Lattice Enumeration: Deterministic Collapse of the SVP Search Space via Modular Projection Pruning"** (Submitted to *SEMA Journal*, Springer Nature).
 
@@ -79,6 +79,8 @@ If you prefer to run it locally on a Linux environment, ensure you have:
 1. Open `SVP_Galois_Pruning_Framework.ipynb` in Google Colab.
 2. Run all cells sequentially.
 3. The C++ engine will compile, and the experiment will execute, replicating the exact dimensional collapse table shown above.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github.com/NachoPeinador/Galois-Lattice-Pruning/blob/main/Notebooks/SVP_Galois_Pruning_Framework.ipynb)
 
 ---
 
