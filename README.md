@@ -1,9 +1,11 @@
 # Galois Invariants in Cyclotomic Lattice Enumeration
 
-[![Paper Status](https://img.shields.io/badge/Paper-Under%20Review-blue.svg)](https://link-to-your-paper-or-zenodo-preprint.com)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![C++](https://img.shields.io/badge/C++-OpenMP-00599C.svg)]()
 [![Python](https://img.shields.io/badge/Python-3.x-3776AB.svg)]()
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19284511.svg)](https://doi.org/10.5281/zenodo.19284511)
+[![ORCID](https://img.shields.io/badge/ORCID-0009--0008--1822--3452-A6CE39?style=flat&logo=orcid&logoColor=white)](https://orcid.org/0009-0008-1822-3452)
+[![X](https://img.shields.io/badge/X-%40todos__lumpen-000000?style=flat&logo=x&logoColor=white)](https://twitter.com/todos_lumpen)
+[![Papers](https://img.shields.io/badge/Paper-Read_PDF-B31B1B?style=flat&logo=latex&logoColor=white)](https://github.com/NachoPeinador/Z6Z-Riemann-Spectrum/blob/main/Paper/Z6Z_Modular_Quantum_Chaos.pdf)
 
 Official code repository and supplementary material for the paper **"Galois Invariants in Cyclotomic Lattice Enumeration: Deterministic Collapse of the SVP Search Space via Modular Projection Pruning"** (Submitted to *SEMA Journal*, Springer Nature).
 
@@ -83,7 +85,34 @@ If this Galois pruning mechanism, the Meet-in-the-Middle (MitM) C++ architecture
   note = {Under Review},
   url = {[https://github.com/NachoPeinador/Galois-Lattice-Pruning](https://github.com/NachoPeinador/Galois-Lattice-Pruning)}
 }
+```
+**APA:**
+
+> Peinador Sala, J. I. (2026). *Explicit Hermitian Hamiltonian for the Riemann Zeros: Arithmetic Quantum Chaos and Multifractality from Z/6Z*. Zenodo. https://doi.org/10.5281/zenodo.19284511
+
 
 </details>
 
 ---
+
+---
+
+## 🔭 Philosophical Context
+
+> *“Nothing in nature is random... A thing appears random only through the incompleteness of our knowledge.”* — **Baruch Spinoza**
+
+For years, the cryptographic community has treated the injected noise in Learning With Errors (LWE) as an impenetrable, featureless fog—an assumption of perfect stochastic thermalization over the lattice phase space. This geometric axiom built the seemingly insurmountable exponential walls of modern Post-Quantum Cryptography.
+
+This work was born from a paradigm shift: observing the cyclotomic lattice not through the traditional lens of Euclidean geometry, but through the rigid, unforgiving architecture of Galois fields. By recognizing that modular projections act as deterministic superselection rules, the "random noise" is revealed to be highly constrained. The noise is not truly ergodic; it is tightly bound by algebraic laws. 
+
+Like previous works, this analytical framework was forged outside the traditional academic silos. It stands as a reminder that supposedly unbreakable cryptographic standards can be critically challenged not necessarily by wielding massive supercomputers, but by combining extreme mathematical curiosity, elegant computational architectures, and the audacity to question foundational axioms.
+
+> *“Do not try and bend the spoon, that’s impossible. Instead, only try to realize the truth... There is no spoon.”* — **Spoon Boy (The Matrix)**
+
+---
+
+<div align="center">
+
+<b>Last Update:</b> April 2026 | <b>Status:</b> Under Peer Review (SEMA Journal) | Built with ⚙️ & 🐍
+
+</div>
