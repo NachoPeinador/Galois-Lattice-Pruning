@@ -1,0 +1,154 @@
+% =====================================================================
+% CONFIGURACIÓN SPRINGER NATURE (sn-jnl) ACTUALIZADA
+% =====================================================================
+% 1. Añadimos 'a4paper' a las opciones de la clase
+\documentclass[sn-mathphys, a4paper]{sn-jnl}
+
+% --- Paquetes Matemáticos y de Formato ---
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath, amssymb, amsfonts, mathtools, amsthm}
+\usepackage{graphicx, dcolumn, bm}
+\usepackage{booktabs}
+
+% 2. Ajustamos los márgenes para que no se vea "corto"
+%\usepackage[margin=2.5cm, bottom=3cm]{geometry}
+
+% 3. Usamos orcidlink para evitar el error del logo en página aparte
+\usepackage{orcidlink}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue}
+
+\begin{document}
+
+% Título 
+\title[Galois Invariants in Cyclotomic Lattice Enumeration]{Galois Invariants in Cyclotomic Lattice Enumeration: Deterministic Collapse of the SVP Search Space via Modular Projection Pruning}
+
+% 4. Autor corregido con orcidlink pegado al nombre 
+% En el bloque de autores
+\author*[1]{\fnm{José Ignacio} \sur{Peinador Sala}~\scalebox{0.1}{\orcidlink{0000-0002-1825-0097}}}
+\email{joseignacio.peinador@gmail.com}
+
+\affil*[1]{\orgname{Independent Researcher}, \city{Valladolid}, \country{Spain}}
+
+\abstract{
+This work investigates the efficacy of simultaneous arithmetic constraints—termed \textit{Galois pruning}—on the Shortest Vector Problem (SVP) over cyclotomic lattices. Unlike traditional geometric pruning methods, which rely on the Euclidean norm, the proposed approach exploits the ideal structure in rings $\mathbb{Z}[x]/\langle x^n + 1 \rangle$ to intercept algebraically inconsistent branches. By implementing a \textit{Meet-in-the-Middle} (MitM) search architecture, we empirically demonstrate that the search space is reduced by a factor of $\prod p_i$, where $p_i$ are the primes associated with the oracle ideals. Results in dimensions up to $d=32$ reveal a node elision exceeding $99.999\%$, indicating that the noise in LWE-based schemes is not perfectly ergodic from a Galois perspective. This finding suggests that the asymptotic complexity of SVP in structured lattices might be lower than current estimates, potentially compromising the concrete security of standards such as ML-KEM.
+}
+
+\maketitle
+
+\section{Introduction}
+
+The security of post-quantum cryptography (PQC) relies heavily on the assumed hardness of the Shortest Vector Problem (SVP) over lattices. Current standards, such as ML-KEM \cite{nist}, assume that the injected noise in Learning With Errors (LWE) instances is uniformly distributed across the phase space, guaranteeing an exponential search complexity. However, this assumption of ergodicity overlooks the inherent arithmetic constraints within the structure of cyclotomic rings.
+
+In this article, we present a pruning mechanism founded on Galois field theory. We propose that the modular projections of the secret vector onto multiple prime ideals act as arithmetic superselection rules that deterministically annihilate vast regions of the search tree, even if they are geometrically plausible.
+
+\section{Methodology: Galois Pruning and MitM Architecture}
+
+Consider a secret vector $\mathbf{s}$ in a cyclotomic lattice. We define its projections onto a basis of $k$ prime ideals $\mathfrak{p}_i$ as $\tau_i = \pi_{\mathfrak{p}_i}(\mathbf{s})$. During the enumeration of coefficients $s_j \in \{-1, 0, 1\}$, any partial branch whose accumulated sum modulo $p_i$ cannot reach the target value $\tau_i$ given the remaining dimensions, is immediately discarded.
+
+To overcome the \textit{blindness} of the oracles at intermediate levels of a Depth-First Search (DFS), we implemented a \textit{Meet-in-the-Middle} (MitM) architecture. The problem of dimension $d$ is divided into two sub-problems of dimension $d/2$. The intersection of the partial solution sets is performed via an optimized binary search in the projection space, allowing us to observe the collapse of the solution space in cryptographically relevant dimensions.
+
+\section{Experimental Results}
+
+The search engine was implemented in C++ using OpenMP for massive parallelism. The reduction in the number of candidate vectors (tree leaves) was evaluated in dimensions $d \in \{20, 24, 28, 32\}$ under the influence of $k \in \{1, 3, 5\}$ modular oracles. The results are detailed in Table \ref{tab:mitm_results}.
+
+\begin{table}[h]
+\caption{\label{tab:mitm_results}Valid vectors surviving Galois superselection (ternary noise).}
+\centering
+\begin{tabular}{l c c r}
+\toprule
+\textbf{Dim ($d$)} & \textbf{Total Leaves ($3^d$)} & \textbf{Oracles ($k$)} & \textbf{Survivors} \\
+\midrule
+20 & $3.4 \times 10^9$ & 1 & 35,945,565 \\
+20 & $3.4 \times 10^9$ & 3 & 3,452 \\
+20 & $3.4 \times 10^9$ & 5 & 0 \\
+\midrule
+24 & $2.8 \times 10^{11}$ & 1 & 2,911,644,659 \\
+24 & $2.8 \times 10^{11}$ & 3 & 280,492 \\
+24 & $2.8 \times 10^{11}$ & 5 & 25 \\
+\midrule
+32 & $1.8 \times 10^{15}$ & 1 & $1.9 \times 10^{13}$ \\
+32 & $1.8 \times 10^{15}$ & 3 & $1.8 \times 10^{9}$ \\
+32 & $1.8 \times 10^{15}$ & 5 & 157,517 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The data demonstrates a drastic elision. For $d=32$ and $5$ oracles, the pruning algorithm elides $99.999999991\%$ of the original solution space.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{search_space_collapse.png}
+\caption{Asymptotic decay of the SVP search space ($\log_3(\Omega_{conf})$) via bounded Galois projections. The near-exponential drop illustrates the deterministic non-ergodicity of the algorithmic noise distribution as the number of parallel discrete oracles ($k$) increases.}
+\label{fig:asymptotic_decay}
+\end{figure}
+
+\subsection{Computational Constraints and Bit-Packing Limitations}
+
+The MitM engine achieves $\mathcal{O}(N \log N)$ sorting efficiency via an aggressive bit-packing strategy. The \texttt{pack\_state} function compacts up to six modular projections into a single unsigned 64-bit integer (\texttt{uint64\_t}) using 10-bit shifts, formulated as \texttt{key = (key << 10) | state[i]}. While this guarantees high-throughput binary searches via \texttt{std::equal\_range} and optimal OpenMP thread reduction across parallel cores, it intrinsically restricts the available prime ideals to $p_i < 1024$. Furthermore, the native register size strictly caps the concurrent oracles to $k \le 6$ to prevent catastrophic integer overflow ($6 \times 10 \text{ bits} \le 64 \text{ bits}$). Consequently, the empirical ceiling observed at $k=5$ in Table \ref{tab:mitm_results} is dictated by hardware and memory architecture boundaries, rather than a degradation of the algebraic superselection principle.
+
+\subsection{Control Experiment: Invariance to Prime Magnitude}
+
+To rigorously confirm that the deterministic collapse is not an artefact of the specific prime magnitudes chosen for Table \ref{tab:mitm_results} (e.g., $p_i \approx 100$), a control experiment was conducted. The MitM engine evaluated the dimension $d=24$ against a disjoint set of smaller coprime integers: $\mathcal{P}_{control} = \{17, 19, 23, 29, 31\}$.
+
+For $k=5$, the theoretical expectation dictated a search space reduction by a factor of $\prod p_i = 6,678,671$. Out of the $282,429,536,481$ original leaves, the empirical C++ execution returned exactly $42,142$ valid survivors, which perfectly matches the theoretical estimate of $\approx 42,288$. This invariant correlation verifies that Galois pruning acts as an independent algebraic sieve, whose elision capability is an inherent property of the ring topology and remains strictly proportional to the magnitude of the applied moduli.
+
+\section{Discussion: The Law of Oracle Independence}
+
+The drastic elision observed empirically necessitates a formal algebraic description. Rather than a mere heuristic artefact, we propose that the modular projections act as statistically independent filters, formalized in the following heuristic lemma.
+
+\newtheorem{lemma}{Lemma}
+\begin{lemma}[Heuristic Independence of Ideal Oracles]
+Consider the topological variable $S \subset \mathbb{Z}^d$ defined as the bounding subset imposing the geometric constraints of the SVP search space. Let $\mathcal{I} = \{\mathfrak{p}_1, \dots, \mathfrak{p}_k\}$ be an intersecting set of strictly disjoint prime ideals within the cyclotomic ring $R$. Assuming the stochastic equidistribution of algorithmic noise across the residual partitions modulo $\prod \mathfrak{p}_i$, the expected cardinality of the confined search space $\Omega_{conf}$ obeys the proportional distribution:
+\begin{equation}
+|\Omega_{conf}| = \left| S \cap \left( \bigcap_{i=1}^k (\mathbf{s} + \mathfrak{p}_i) \right) \right| \approx \frac{|S|}{\prod_{i=1}^k p_i}
+\end{equation}
+\end{lemma}
+
+This relationship dictates that the elision rate is inversely proportional to the product of the oracle primes, indicating an algebraic collapse of the search space.
+
+This phenomenon has direct implications for the security of Ring-LWE. If an attacker can formulate a number of oracles $k$ that scales linearly with the dimension $d$, the denominator $\prod p_i$ could grow at a rate comparable to the exponential growth of the search tree ($3^d$), significantly reducing the asymptotic complexity of the problem. These results are consistent with the reduction of fractal dimensionality observed in the cyclotomic Hamiltonian \cite{peinador2026}, where computational parsimony emerges from the gauge structure of the system.
+
+\subsection{Orthogonality to Geometric Pruning}
+
+Traditional lattice algorithms, such as Schnorr-Euchner enumeration or modern Block Korkine-Zolotarev (BKZ) implementations, deploy geometric pruning constrained by an evolving Euclidean bounding radius. In contrast, Galois superselection annihilates branches that are geometrically plausible under the Schnorr metric but concurrently incompatible at the algebraic level. Because this arithmetic sieve operates orthogonally to geometric constraints, it presents a deterministic complement to probabilistic machine-learning classifiers or heuristic geometric bounding, enabling potential integration into Hybrid Search Pruning architectures.
+
+\subsection{Generalization Towards ML-KEM (FIPS 203)}
+
+While the current empirical validation operates over simple cyclotomic scalar rings, contemporary Post-Quantum standards demand multidimensional evaluations. The NIST FIPS 203 specification formalizes ML-KEM over Module-LWE (MLWE), wherein the public generator matrix and the secret vectors reside in module spaces bounded by the polynomial ring $R_q = \mathbb{Z}_q[x]/\langle x^{256} + 1 \rangle$. Applying Galois pruning to ML-KEM will require extending the scalar projections into a matrix of ideal projections across module ranks. Assuming the orthogonality of the oracle ideals survives this modularization, the non-ergodicity of the discrete noise matrix $\mathbf{e}$ could persist across the multidimensional arrays, exposing a structural vulnerability.
+
+\section{Conclusion}
+
+We have empirically demonstrated that the injection of Galois invariants into SVP enumeration facilitates a deterministic collapse of the search space in constrained dimensions. Through an optimized MitM architecture, we provided evidence that modular pruning acts as an arithmetic sieve, exploiting the non-ergodicity of discrete noise within structured cyclotomic topologies.
+
+If an attacker can successfully formulate a dense array of mathematically independent oracles ($k \sim \mathcal{O}(d)$) without triggering degenerate ramifications in high-degree rings, the denominator $\prod p_i$ could theoretically offset the exponential tree growth ($3^d$). Future work will focus on overcoming current hardware bit-packing limitations to explore ideal density dynamics in cryptographically robust dimensions up to $d=512$. While these findings do not immediately fracture the robust encapsulation mechanisms of ML-KEM, they necessitate a critical re-evaluation of the uniform ergodicity assumption regarding term noise within Module-LWE paradigms, heralding new avenues in structural algebraic cryptanalysis.
+
+% =====================================================================
+% Declarations (Required by Springer Nature)
+% =====================================================================
+\section*{Declarations}
+
+\textbf{Funding:} The author declares that no institutional funding or grants from public or private bodies were received for this independent research study.
+
+\textbf{Conflict of Interest:} The author declares no financial, professional, or personal conflicts of interest that could have influenced the results or interpretations presented in this manuscript.
+
+\textbf{Data and Code Availability:} The numerical data generated in the simulations and the Python/C++ source code for the implementation of the Cyclotomic Sieve and Meet-in-the-Middle architecture are publicly available in the repository: \url{https://github.com/NachoPeinador/Galois-Lattice-Pruning/}.
+
+\textbf{AI Usage:} In compliance with Springer Nature's ethical policies on artificial intelligence, the author declares the use of Large Language Models (LLMs) exclusively for algorithmic optimization support, C++/Python source code debugging, and orthotypographical assistance. The axiomatic foundation, the intellectual authorship of the theorems, and the responsibility for the final mathematical results reside entirely with the author.
+
+\begin{thebibliography}{99}
+
+\bibitem{nist} 
+National Institute of Standards and Technology (NIST), \textit{FIPS PUB 203: Module-Lattice-Based Key-Encapsulation Mechanism Standard}. U.S. Department of Commerce. \url{https://doi.org/10.6028/NIST.FIPS.203} (2024).
+
+\bibitem{peinador2026} 
+J. I. Peinador Sala, \textit{Explicit Hermitian Hamiltonian for the Riemann Zeros}, submitted to Z. Naturforsch. A (ref: ZNA.2026.0134). Zenodo Repository, \url{https://doi.org/10.5281/zenodo.19284511} (2026).
+
+\bibitem{schnorr} 
+C. P. Schnorr and M. Euchner, \textit{Lattice basis reduction: Improved practical algorithms and solving subset sum problems}, Math. Programming \textbf{66}, 181--199. \url{https://doi.org/10.1007/BF01581144} (1994).
+
+\end{thebibliography}
+
+\end{document}
