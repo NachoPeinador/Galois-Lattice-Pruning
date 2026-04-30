@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this Galois pruning mechanism, the Law of Oracle Independence, or the associated MitM code in your research, please cite it as below."
+authors:
+  - family-names: "Peinador Sala"
+    given-names: "José Ignacio"
+    orcid: "https://orcid.org/0000-0002-1825-0097"
+title: "Galois Invariants in Cyclotomic Lattice Enumeration: Deterministic Collapse of the SVP Search Space via Modular Projection Pruning"
+version: 1.0.0
+date-released: 2026-04-30
+url: "https://github.com/NachoPeinador/Galois-Lattice-Pruning"
+repository-code: "https://github.com/NachoPeinador/Galois-Lattice-Pruning"
+keywords:
+  - Shortest Vector Problem (SVP)
+  - cyclotomic lattices
+  - Galois pruning
+  - Learning With Errors (LWE)
+  - Post-Quantum Cryptography (PQC)
+  - ML-KEM
+  - lattice enumeration
+  - meet-in-the-middle
+  - non-ergodic noise
+license: "PolyForm Noncommercial 1.0.0"
+abstract: >-
+  This repository provides the computational framework and C++/OpenMP
+  Meet-in-the-Middle (MitM) engine for Galois-based pruning in cyclotomic
+  lattices. It validates the Law of Oracle Independence, demonstrating a 
+  deterministic collapse of the SVP search space by a factor of the product 
+  of oracle primes (∏ p_i). The research provides empirical proof of the 
+  non-ergodicity of discrete noise in structured lattices, challenging the 
+  asymptotic security assumptions of modern standards like ML-KEM.
+license-url: "https://polyformproject.org/licenses/noncommercial/1.0.0"
