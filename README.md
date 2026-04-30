@@ -80,7 +80,7 @@ If you prefer to run it locally on a Linux environment, ensure you have:
 2. Run all cells sequentially.
 3. The C++ engine will compile, and the experiment will execute, replicating the exact dimensional collapse table shown above.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github.com/NachoPeinador/Galois-Lattice-Pruning/blob/main/Notebooks/SVP_Galois_Pruning_Framework.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/NachoPeinador/Galois-Lattice-Pruning/blob/main/Notebooks/SVP_Galois_Pruning_Framework.ipynb)
 
 ---
 
