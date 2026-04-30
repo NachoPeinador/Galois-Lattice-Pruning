@@ -141,6 +141,6 @@ Like previous works, this analytical framework was forged outside the traditiona
 
 <div align="center">
 
-<b>Last Update:</b> April 2026 | <b>Status:</b> Under Peer Review (SEMA Journal) | Built with ⚙️ & 🐍
+<b>Last Update:</b> April 2026 | <b>Status:</b> Under Peer Review (SEMA Journal) SEMJ-D-26-00109 | Built with ⚙️ & 🐍
 
 </div>
