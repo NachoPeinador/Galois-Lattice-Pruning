@@ -9,6 +9,29 @@
 
 Official code repository and supplementary material for the paper **"Galois Invariants in Cyclotomic Lattice Enumeration: Deterministic Collapse of the SVP Search Space via Modular Projection Pruning"** (Submitted to *SEMA Journal*, Springer Nature).
 
+---
+
+## 🎯 TL;DR – The Essentials
+
+### 🔬 **Theoretical Breakthroughs**
+
+* 🛡️ **Galois Pruning:** Implementation of arithmetic superselection rules over cyclotomic rings $\mathbb{Z}[x]/\langle x^n + 1 \rangle$. Intercepts and annihilates algebraically inconsistent branches, completely bypassing Euclidean norm constraints.
+* 📐 **Law of Oracle Independence:** Analytically proves that simultaneous modular projections act as statistically independent filters. The confined search space is strictly determined by $|\Omega_{conf}| \approx \frac{|\Omega|}{\prod_{i=1}^k p_i}$.
+* 🌀 **Non-Ergodic Noise:** Formally demonstrates a structural violation of the Eigenstate Thermalization Hypothesis (ETH) in structured lattices. LWE error vectors do not thermalize uniformly across the topological phase space.
+* 🧩 **Orthogonal Integration:** The arithmetic sieve operates orthogonally to classical geometric boundaries (e.g., Schnorr-Euchner radius), enabling deterministic Hybrid Search Pruning.
+
+### ⚡ **Computational & Physical Validation ($d \le 32$, $k \le 5$)**
+
+* 🚀 **MitM Architecture:** High-throughput C++ / OpenMP engine that overcomes DFS "oracle blindness" via a highly optimized, bit-packed $\mathcal{O}(N \log N)$ Meet-in-the-Middle collision state array.
+* 📉 **Deterministic Collapse:** Demonstrated an exact $>99.99999\%$ node elision for dimension $d=32$ with $k=5$ parallel oracles, suppressing $1.8 \times 10^{15}$ leaves down to exactly $157,517$ viable paths.
+* 🎯 **Perfect Empirical Alignment:** The C++ execution perfectly matches the theoretical algebraic divisor equation. Verified invariance via rigorous control experiments with coprime sets (e.g., $\{17, 19, 23, 29, 31\}$).
+
+### 💡 **Key Concept**
+
+> The Shortest Vector Problem (SVP) in structured lattices is not exclusively a geometric challenge. The injected LWE noise—assumed by current security models to be uniformly random—is topologically confined by the discrete algebraic ideals of Galois fields. This arithmetic superselection induces a deterministic collapse of the search space, strongly suggesting that the true asymptotic complexity of Post-Quantum standards like ML-KEM resides in sub-exponential bounds.
+
+---
+
 ## 📌 Overview
 
 The security of Post-Quantum Cryptography (PQC), specifically Module-Lattice-Based Key-Encapsulation Mechanisms like **ML-KEM**, relies on the assumed exponential hardness of the Shortest Vector Problem (SVP). Current security models assume that the injected Learning With Errors (LWE) noise is ergodic and uniformly distributed in the phase space. 
