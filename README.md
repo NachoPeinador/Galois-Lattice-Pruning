@@ -23,7 +23,7 @@ Official code repository and supplementary material for the paper **"Galois Inva
 * 🔀 **Adaptive Two‑Phase Search:** A prioritised search strategy, inspired by quantum modular algorithms, is validated on a fully enumerated $d=8$ instance.
 * 🎲 **Marginal Uniformity:** Without leakage, individual residues are statistically indistinguishable from uniform (Wasserstein distance tests). The attack **requires** the side channel.
 
-### ⚡ Core Experimental Result ($d=32$, $\mathbb{Q}(\zeta_{64})$)
+### ⚡ **Core Experimental Result ($d=32$, ℚ(ζ₆₄))**
 
 | $k$ | $\prod q_i$ | Survivors (emp.) | Survivors (th.) | Pruning |
 |-----|-------------|------------------|-----------------|---------|
