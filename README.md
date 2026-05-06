@@ -16,7 +16,7 @@ Official code repository and supplementary material for the paper **"Galois Inva
 ### 🔬 **Theoretical & Computational Breakthroughs**
 
 * 🛡️ **Galois Pruning:** Arithmetic superselection —projecting ternary secret vectors onto the residue fields of prime ideals in $\mathbb{Z}[x]/(x^n+1)$— eliminates algebraically inconsistent branches before they can proliferate.
-* 📐 **Law of Oracle Independence:** The number of survivors collapses as $|\Omega_{\mathrm{conf}}| = 3^d\,/\!\prod q_i$, where $q_i = p_i^{f_i}$ are the **true ideal norms**. Empirically validated up to $d=32$ with $k=3$ leaked ideals ($>\!99.999999991\%$ node elision).
+* 📐 **Law of Oracle Independence:** The number of survivors collapses as $|\Omega_{\mathrm{conf}}| = 3^d\,/\!\prod q_i$, where $q_i = p_i^{f_i}$ are the **true ideal norms**. Empirically validated up to $d=32$ with $k=3$ leaked ideals $>\99.999999991\%$ node elision.
 * 🔗 **Galois Group Reduction:** Conjugate prime ideals are tied by Frobenius automorphisms; learning one residue automatically reveals all $g = n/f$ conjugates. This effectively halves the number of independent side‑channel oracles.
 * 🧮 **Extrapolation to ML‑KEM:** In the NIST standard ring $\mathbb{Q}(\zeta_{512})$ ($n=256$), two leaked inert‑prime residues ($p=3$ and $p=5$) already make the secret unique.
 * 📏 **Area‑Law Entropy:** The configuration entropy of survivors does **not** grow with the volume $3^d$ but saturates to a constant once $\prod q_i > 3^d$, a hallmark of non‑ergodic phases.
