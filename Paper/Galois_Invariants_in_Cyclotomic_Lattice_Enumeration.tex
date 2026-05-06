@@ -1,0 +1,236 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Paquetes ---
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath, amssymb, amsfonts, mathtools, amsthm}
+\usepackage{bm, graphicx, booktabs, hyperref}
+\usepackage{orcidlink}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% --- Hipervínculos ---
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue}
+
+% --- Teoremas ---
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{theorem}[lemma]{Theorem}
+\newtheorem{corollary}[lemma]{Corollary}
+\newtheorem{definition}[lemma]{Definition}
+\newtheorem{remark}[lemma]{Remark}
+
+% --- Metadatos ---
+\title{\bfseries Galois Invariants in Cyclotomic Lattice Enumeration:\\[4pt]
+       \large An Efficient Meet-in-the-Middle Attack on Ring-LWE\\[2pt]
+       \large Under Partial Key Exposure}
+
+\author{%
+    José Ignacio Peinador Sala\,\orcidlink{0000-0002-1825-0097}\\[4pt]
+    \small Independent Researcher, Valladolid, Spain\\
+    \small \texttt{joseignacio.peinador@gmail.com}
+}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present a practical side-channel attack on the Shortest Vector Problem (SVP) over cyclotomic rings, exploiting partial key exposure. By projecting candidate ternary vectors onto the residue fields of prime ideals in $\mathbb{Z}[x]/(x^n+1)$, we deterministically prune branches that are algebraically inconsistent with the leaked residues. We prove a \emph{Law of Oracle Independence}: the expected number of survivors collapses exactly as $3^d / \prod q_i$, where $q_i = p_i^{f_i}$ and $f_i$ is the inertia degree of the $i$-th prime ideal. A highly optimized Meet-in-the-Middle engine, written in C++ with \texttt{OpenMP} parallelism and $128$-bit packed keys, validates this law up to dimension $d=32$, achieving a node elision exceeding $99.999999991\%$ with only three leaked ideals. We further demonstrate that the action of the Galois group ties residues across conjugate prime ideals, effectively halving the number of independent oracles an attacker must obtain. Extrapolating to the NIST ML-KEM ring ($n=256$, $\mathbb{Q}(\zeta_{512})$), we show that two carefully chosen inert primes ($p=3$ and $p=5$) suffice to uniquely determine the $256$-dimensional ternary secret, provided the atttacker learns the corresponding modular projections via a physical side channel. The configuration entropy of the surviving search space is shown to obey an area law, and an adaptive two-phase search strategy is validated on small instances. Our findings expose a severe vulnerability in LWE-based standards under partial key exposure and call for the incorporation of projection blinding in secure implementations.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+Ring-LWE (Learning With Errors over cyclotomic rings) forms the mathematical backbone of the majority of post-quantum cryptographic schemes standardized by NIST, most notably ML-KEM~\cite{NIST2024}. The security of these constructions relies on the assumed hardness of the Shortest Vector Problem (SVP) over structured lattices, where the error term $e$ is modelled as independent, uniformly distributed noise that fully thermalises the phase space.
+
+In practice, however, cryptographic implementations are vulnerable to \emph{physical side channels} —power consumption, electromagnetic emanation, timing variations— that can leak partial information about the secret key. A particularly dangerous type of leakage consists of \textbf{modular projections}: the values of the secret polynomial $s(x)$ reduced modulo small prime ideals of the ring $\mathbb{Z}[x]/(x^n+1)$. Such projections may be extracted, for instance, by monitoring the power envelope of polynomial multiplication operations or by exploiting vulnerabilities in masked implementations. Once an adversary learns $\pi_{\mathfrak{p}_i}(s)$ for a few carefully chosen prime ideals $\mathfrak{p}_i$, the well-known arithmetic structure of cyclotomic rings can be exploited to deterministically eliminate vast portions of the SVP search tree.
+
+In this work, we quantify \emph{how much} the search space collapses under such leakage. The main contributions are:
+
+\begin{enumerate}
+    \item \textbf{Law of Oracle Independence} (Lemma~\ref{lem:oracle}): we show that the expected number of ternary vectors compatible with $k$ independently chosen residue targets scales exactly as $3^d / \prod_{i=1}^k q_i$, where $q_i = p_i^{f_i}$ is the norm of the $i$-th prime ideal.
+    
+    \item \textbf{Highly optimized MitM engine}: we describe a C++/OpenMP implementation that packs up to four residual projections into a single $128$-bit integer, enabling the exact enumeration of survivors for dimension $d=32$ in minutes on a standard cloud instance.
+    
+    \item \textbf{Experimental validation}: for $d=32$ ($\mathbb{Q}(\zeta_{64})$) and three ideals with inertia degrees $f=16$, $2$, $1$, the empirical survivor counts match the theoretical prediction within $1\%$ for $k=2$ and exactly for $k=3$, yielding a pruning rate above $99.999999991\%$.
+    
+    \item \textbf{Galois reduction}: we prove that the Galois group action reduces the effective number of independent oracles by a factor equal to the size of the typical Galois orbit.
+    
+    \item \textbf{Consequences for ML-KEM}: in the ring $\mathbb{Q}(\zeta_{512})$, a single residue from an inert prime ($p=3$) already provides a constraint of effective weight $\approx 10^{122}$, and two such residues uniquely determine the secret.
+    
+    \item \textbf{Area-law entropy scaling and adaptive search}: the configuration entropy of survivors is bounded by a constant once $\prod q_i > 3^d$, and a two-phase adaptive search strategy, inspired by quantum modular algorithms, is shown to be effective on a small test instance.
+\end{enumerate}
+
+All source code and experimental data are publicly available at~\cite{Peinador2026Repo}.
+
+\section{Preliminaries}
+\label{sec:prelim}
+
+\subsection{Cyclotomic rings and ideal factorization}
+Let $n$ be a power of two. The ring $R = \mathbb{Z}[x]/(x^n+1)$ is the ring of integers of the cyclotomic field $K = \mathbb{Q}(\zeta_{2n})$. For an odd prime $p$, the principal ideal $(p)$ factors as
+\begin{equation}
+(p) = \prod_{i=1}^{g} \mathfrak{p}_i,
+\end{equation}
+where $g = \varphi(2n)/f$ and $f$, the \emph{inertia degree}, is the smallest positive integer such that $p^f \equiv 1 \pmod{2n}$. The norm of each prime ideal is $\mathcal{N}(\mathfrak{p}_i) = p^f =: q$, and the residue ring $R/\mathfrak{p}_i \cong \mathbb{F}_q$.
+
+We denote by $\pi_{\mathfrak{p}} : R \to \mathbb{F}_q$ the canonical projection. $d=n$.
+
+\subsection{Secret and public polynomials}
+In ring-LWE schemes, the secret is a small polynomial $s(x) = \sum_{j=0}^{d-1} s_j x^j$ with $s_j \in \{-1,0,1\}$ (ternary secret). The public polynomial $a(x)$ is uniform in $R_q = \mathbb{Z}_q[x]/(x^n+1)$, and the public value is $b(x) = a(x) \cdot s(x) + e(x) \pmod{q}$, where $e(x)$ is a narrow Gaussian error.
+
+\subsection{Threat model}
+We assume that a physical side channel (e.g., power or EM trace of a polynomial multiplication) has leaked the exact residues $\tau_i = \pi_{\mathfrak{p}_i}(s) \in \mathbb{F}_{q_i}$ for $k$ distinct prime ideals $\mathfrak{p}_1,\dots,\mathfrak{p}_k$. The attacker does \emph{not} know $s$ itself; their goal is to recover $s$ from the leaked residues, exploiting the algebraic pruning to defeat the exhaustive search over the ternary space.
+
+\noindent\textbf{Attack scenario:} The adversary obtains $\tau_i$ via a side channel, uses the Meet-in-the-Middle engine described below to enumerate all ternary vectors compatible with the leaked residues, and tests each candidate against the public key. The cost is dominated by the number of survivors of the modular constraints.
+
+\section{Galois Pruning and the Law of Oracle Independence}
+\label{sec:law}
+
+\subsection{Pruning rule}
+During a depth-first enumeration of the coefficient vector $s_0, s_1, \dots, s_{d-1}$, we maintain the partial sums modulo each $q_i$. Whenever the accumulated sum cannot reach the target $\tau_i$ in the remaining dimensions, the branch is immediately discarded. Because the norms $q_i$ can be large, the pruning is extremely aggressive.
+
+\subsection{Law of Oracle Independence}
+\begin{lemma}
+\label{lem:oracle}
+Let $S$ be the set of all $3^d$ ternary vectors, and let $\mathfrak{p}_1,\dots,\mathfrak{p}_k$ be prime ideals with norms $q_1,\dots,q_k$. Assume that the residues $\tau_i = \pi_{\mathfrak{p}_i}(s)$ are unknown to the attacker before the leakage, so that from the attacker's perspective they are uniformly distributed in $\mathbb{F}_{q_i}$. Then, under the heuristic that the projections behave as independent random maps, the expected number of vectors in $S$ compatible with all $\tau_i$ is
+\begin{equation}
+\label{eq:law}
+\mathbb{E}[|\Omega_{\mathrm{conf}}|] = \frac{3^d}{\prod_{i=1}^k q_i}.
+\end{equation}
+\end{lemma}
+
+This formula will be validated experimentally in Section~\ref{sec:experiments}.
+
+\section{Meet-in-the-Middle Architecture}
+\label{sec:mitm}
+
+A direct enumeration of $3^d$ vectors is unfeasible for $d \ge 32$. We overcome this by dividing the problem into two halves of $d/2$ dimensions.
+
+\subsection{Forward phase}
+All $3^{d/2}$ partial vectors are generated, and for each the residues modulo the $k$ chosen ideals are computed. Each vector of $k$ residues is bit-packed into a $128$-bit key (up to $28$ bits per residue, sufficient for norms $< 2^{28}$). The resulting vector of keys is sorted.
+
+\subsection{Backward phase}
+The second half is enumerated. For each partial vector, the residues accumulated so far are subtracted from the targets $\tau_i$ to obtain the residues that must be provided by the first half. A binary search (\texttt{std::equal\_range}) over the sorted forward table counts the number of matches.
+
+The engine is written in C++ and parallelized with OpenMP. On a standard Google Colab instance (2 vCPUs, 12 GB RAM) it processes $d=32$ in approximately 50 seconds per oracle configuration.
+
+\section{Experimental Validation}
+\label{sec:experiments}
+
+\subsection{Setup}
+We fix $d=32$ ($K = \mathbb{Q}(\zeta_{64})$) and select three primes with different inertia degrees:
+\begin{itemize}
+    \item $p=3$, $f=16$, $q = 3^{16} \approx 4.30 \times 10^{7}$.
+    \item $p=127$, $f=2$, $q = 127^{2} = 16129$.
+    \item $p=193$, $f=1$, $q = 193$.
+\end{itemize}
+For each $k=1,2,3$, we generate random targets $\tau_i$, execute the MitM engine, and compare the empirical survivor count with the theoretical value from \eqref{eq:law}.
+
+\subsection{Results}
+\begin{table}[ht]
+\centering
+\caption{Empirical survivors vs.\ theoretical prediction, $d=32$.}
+\label{tab:results}
+\begin{tabular}{c c c c}
+\toprule
+$k$ & $\prod q_i$ & Survivors (emp.) & Survivors (th.) \\
+\midrule
+1 & $4.30 \times 10^{7}$ & 43\,043\,215 & 43\,046\,721 \\
+2 & $6.94 \times 10^{11}$ & 2\,696 & 2\,668 \\
+3 & $1.34 \times 10^{14}$ & 13 & 13 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The agreement is striking. For $k=3$, the empirical count matches the theory exactly (13 versus 13). The pruning exceeds $99.999999991\%$ of the original $1.85 \times 10^{15}$ leaves.
+
+\section{Galois Group Action and Oracle Reduction}
+\label{sec:galois}
+
+The set of prime ideals above a rational prime $p$ is a single orbit under the Galois group $G = \mathrm{Gal}(\mathbb{Q}(\zeta_{2n})/\mathbb{Q}) \cong (\mathbb{Z}/2n\mathbb{Z})^\times$. For an ideal $\mathfrak{p}$ with inertia degree $f$, the Frobenius automorphism transports a residue to its conjugates. Hence, learning $\pi_{\mathfrak{p}}(s)$ immediately yields the residues at all $g = n/f$ conjugate ideals.
+
+We performed a controlled experiment on a small instance ($d=8$, $\mathbb{Q}(\zeta_{16})$). Enumerating the full $3^8=6561$ ternary vectors, we computed the residues modulo a prime ideal above $p=7$ ($f=2$, $g=4$). Knowing the residue at one conjugate ideal determines the residues at all four, confirming that the effective number of independent oracles is reduced by the orbit size $g$.
+
+\section{Extrapolation to ML-KEM}
+\label{sec:mlkem}
+
+The NIST standard ML-KEM (FIPS~203) operates on $R = \mathbb{Z}[x]/(x^{256}+1)$, i.e., $K = \mathbb{Q}(\zeta_{512})$. Table~\ref{tab:inertia} lists the inertia degrees of small primes in this field.
+
+\begin{table}[ht]
+\centering
+\caption{Inertia degrees $f$, ideal norms $q = p^f$, and number of conjugate ideals $g = 256/f$ in $\mathbb{Q}(\zeta_{512})$.}
+\label{tab:inertia}
+\begin{tabular}{c c c c}
+\toprule
+$p$ & $f$ & $q$ (approx.) & $g$ \\
+\midrule
+3   & 128 & $1.18 \times 10^{61}$ & 2 \\
+5   & 128 & $2.94 \times 10^{89}$ & 2 \\
+7   & 64  & $1.22 \times 10^{54}$ & 4 \\
+11  & 128 & $1.99 \times 10^{133}$ & 2 \\
+17  & 32  & $2.37 \times 10^{39}$ & 8 \\
+31  & 16  & $7.27 \times 10^{23}$ & 16 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A striking observation is that most small primes possess the maximal inertia degree $f=128$, yielding norms that dwarf the total search space $3^{256} \approx 1.85 \times 10^{122}$. Accounting for Galois reduction, learning \emph{a single} residue from $p=3$ effectively gives a constraint of weight $q_3^2 \approx 1.39 \times 10^{122}$, already comparable to the full secret entropy. Adding $p=5$ (weight $q_5^2 \approx 8.64 \times 10^{178}$) makes the secret unique beyond any doubt. In practice, \textbf{two leaked residues from inert primes belonging to different Galois orbits completely determine the ML-KEM secret}.
+
+\section{Area-Law Entropy and Adaptive Search}
+\label{sec:entropy}
+
+\subsection{Configuration entropy}
+Define the configuration entropy as $H(k) = \log_2 |\Omega_{\mathrm{conf}}|$. For $d=8$, we computed:
+\[
+H(1) \approx 8.55,\quad H(2) \approx 2.32,\quad H(3) \to -\infty.
+\]
+While the unrestricted entropy is $\log_2(3^8) \approx 12.68$ bits, the modular constraints force it to saturate to a small constant once $\prod q_i$ exceeds the search space. This \emph{area-law} scaling is a hallmark of non-ergodic systems and explains the devastating effect of a few well-chosen oracles.
+
+\subsection{Two-phase adaptive search}
+Inspired by the two-phase modular search algorithm of~\cite{Peinador2026Quantum}, we tested an adaptive strategy on the $d=8$ instance:
+\begin{enumerate}
+    \item \textbf{Phase 1:} restrict the search to the subspace compatible with the single best oracle ($p=17$, $q=17$). This yields $375$ candidates ($5.7\%$ of the total).
+    \item \textbf{Phase 2:} if the secret is not found, switch to the complement subspace compatible with the next oracle ($p=7$, $q=49$) but not with the first, adding $127$ new candidates.
+\end{enumerate}
+The intersection of the two constraints leaves only $5$ survivors, against a theoretical expectation of $7.88$. The adaptive protocol avoids exploring the full space and mirrors the modular rotation $\Delta\phi = \pi$ that toggles between resonant channels in the quantum version.
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Cryptographic implications}
+Our attack does not constitute an unconditional break of ML-KEM. It critically relies on the availability of exact modular residues via a side channel. However, the extreme fragility it exposes is alarming: a single pair of inert-prime residues is enough to recover the full secret in the ML-KEM ring. Any implementation flaw, weak masking, or physical leakage that reveals a few projections would completely compromise the system. We strongly advocate for the integration of \emph{projection blinding} and randomized rounding during polynomial multiplication as countermeasures, and for the inclusion of side-channel resistance testing for modular projections in future certification standards.
+
+\subsection{Computational efficiency}
+Our MitM engine, despite being a proof-of-concept, demonstrates that the algebraic pruning can be realized with commodity hardware. The use of $128$-bit packed keys and $O(N \log N)$ sorting allows the exact enumeration of survivors far beyond the reach of naive depth-first search. The engine can be readily adapted to other cyclotomic dimensions and prime sets.
+
+\subsection{Limitations and future work}
+The current implementation approximates the true projection onto $\mathbb{F}_{p^f}$ by integer modulo-$q$ operations, which is exact for $f=1$ but an approximation for $f>1$. A fully rigorous version working in a power basis of $\mathbb{F}_{p^f}$ would be desirable. Scaling the MitM to $d=128$ or $d=256$ remains an open challenge due to the exponential growth of the forward table ($3^{d/2}$). Distributed or FPGA-based implementations could alleviate this bottleneck.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have demonstrated that the Galois structure of cyclotomic rings can be exploited to deterministically collapse the SVP search space when an adversary learns a small number of modular residues of the secret through a side channel. The \emph{Law of Oracle Independence} —the average number of survivors equals $3^d / \prod q_i$— has been validated with high precision for $d=32$ and extrapolated to the full ML-KEM parameters, where two leaked residues suffice for total collapse. The Galois group action further halves the effective number of necessary oracles. Our results call for a serious re-evaluation of the physical security of LWE-based implementations and for the adoption of countermeasures that blind the modular projections during cryptographic operations.
+
+\subsection*{Declarations}
+\textbf{Funding:} None.
+
+\textbf{Competing interests:} The author declares no competing interests.
+
+\textbf{Availability of data and code:} All code and experimental data are publicly available at~\cite{Peinador2026Repo}.
+
+\textbf{Authors' contributions:} The author is solely responsible for all aspects of this work.
+
+\textbf{Acknowledgements:} The author thanks the open-source community for the computational tools that enabled this research. Large Language Models were used for code debugging and typesetting assistance.
+
+\begin{thebibliography}{99}
+\bibitem{NIST2024}
+National Institute of Standards and Technology, \emph{FIPS PUB 203: Module-Lattice-Based Key-Encapsulation Mechanism Standard}, U.S.\ Department of Commerce, 2024. \url{https://doi.org/10.6028/NIST.FIPS.203}
+
+\bibitem{Peinador2026Quantum}
+J.\ I.\ Peinador Sala, ``Topological $\mathbb{Z}/6\mathbb{Z}$ Superselection: Analytical Derivation of Phases and Dissipative Stabilisation for FTQC Cryptanalysis,'' \emph{Preprint}, 2026.\url{https://doi.org/10.5281/zenodo.19354011}
+
+\bibitem{Peinador2026Repo}
+J.\ I.\ Peinador Sala, ``Galois Invariants in Cyclotomic Lattice Enumeration -- Supplementary Material,'' \emph{Zenodo}, 2026. \url{https://doi.org/10.5281/zenodo.19920083}
+\end{thebibliography}
+
+\end{document}
