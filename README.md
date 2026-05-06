@@ -15,21 +15,21 @@ Official code repository and supplementary material for the paper **"Galois Inva
 
 ### 🔬 **Theoretical & Computational Breakthroughs**
 
-* 🛡️ **Galois Pruning:** Arithmetic superselection —projecting ternary secret vectors onto the residue fields of prime ideals in $\mathbb{Z}[x]/(x^n+1)$— eliminates algebraically inconsistent branches before they can proliferate.
-* 📐 **Law of Oracle Independence:** The number of survivors collapses as $|\Omega_{\mathrm{conf}}| = 3^d\,/\!\prod q_i$, where $q_i = p_i^{f_i}$ are the **true ideal norms**. Empirically validated up to $d=32$ with $k=3$ leaked ideals >99.999999991% node elision.
-* 🔗 **Galois Group Reduction:** Conjugate prime ideals are tied by Frobenius automorphisms; learning one residue automatically reveals all $g = n/f$ conjugates. This effectively halves the number of independent side‑channel oracles.
-* 🧮 **Extrapolation to ML‑KEM:** In the NIST standard ring $\mathbb{Q}(\zeta_{512})$ ($n=256$), two leaked inert‑prime residues ($p=3$ and $p=5$) already make the secret unique.
-* 📏 **Area‑Law Entropy:** The configuration entropy of survivors does **not** grow with the volume $3^d$ but saturates to a constant once $\prod q_i > 3^d$, a hallmark of non‑ergodic phases.
-* 🔀 **Adaptive Two‑Phase Search:** A prioritised search strategy, inspired by quantum modular algorithms, is validated on a fully enumerated $d=8$ instance.
+* 🛡️ **Galois Pruning:** Arithmetic superselection —projecting ternary secret vectors onto the residue fields of prime ideals in ℤ[x]/(xⁿ+1)— eliminates algebraically inconsistent branches before they can proliferate.
+* 📐 **Law of Oracle Independence:** The number of survivors collapses as |Ω_conf| = 3ᵈ / ∏ qᵢ, where qᵢ = pᵢ^{fᵢ} are the **true ideal norms**. Empirically validated up to d=32 with k=3 leaked ideals (>99.999999991% node elision).
+* 🔗 **Galois Group Reduction:** Conjugate prime ideals are tied by Frobenius automorphisms; learning one residue automatically reveals all g = n/f conjugates. This effectively halves the number of independent side‑channel oracles.
+* 🧮 **Extrapolation to ML‑KEM:** In the NIST standard ring ℚ(ζ₅₁₂) (n=256), two leaked inert‑prime residues (p=3 and p=5) already make the secret unique.
+* 📏 **Area‑Law Entropy:** The configuration entropy of survivors does **not** grow with the volume 3ᵈ but saturates to a constant once ∏ qᵢ > 3ᵈ, a hallmark of non‑ergodic phases.
+* 🔀 **Adaptive Two‑Phase Search:** A prioritised search strategy, inspired by quantum modular algorithms, is validated on a fully enumerated d=8 instance.
 * 🎲 **Marginal Uniformity:** Without leakage, individual residues are statistically indistinguishable from uniform (Wasserstein distance tests). The attack **requires** the side channel.
 
-### ⚡ **Core Experimental Result ($d=32$, ℚ(ζ₆₄))**
+### ⚡ **Core Experimental Result (d=32, ℚ(ζ₆₄))**
 
-| $k$ | $\prod q_i$ | Survivors (emp.) | Survivors (th.) | Pruning |
-|-----|-------------|------------------|-----------------|---------|
-| 1   | $4.30\times10^{7}$  | 43 043 215 | 43 046 721 | 99.9999977 % |
-| 2   | $6.94\times10^{11}$ | 2 696       | 2 668       | 99.9999999999 % |
-| 3   | $1.34\times10^{14}$ | **13**      | **13**      | 100.0000000000 % |
+| k | ∏ qᵢ | Survivors (emp.) | Survivors (th.) | Pruning |
+|---|-------|------------------|-----------------|---------|
+| 1 | 4.30×10⁷ | 43 043 215 | 43 046 721 | 99.9999977% |
+| 2 | 6.94×10¹¹ | 2 696 | 2 668 | 99.9999999999% |
+| 3 | 1.34×10¹⁴ | **13** | **13** | 100.0000000000% |
 
 *Empirical counts from the C++/OpenMP MitM engine (128‑bit packed keys) match the theoretical prediction with striking accuracy.*
 
