@@ -135,5 +135,5 @@ The engine and the theoretical framework were crafted outside traditional academ
 ---
 
 <div align="center">
-<b>Last Update:</b> May 2026 | <b>Status:</b> Submitted to <i>Journal of Cryptographic Engineering</i> | Built with ⚙️ & 🐍
+<b>Last Update:</b> May 2026 | <b>Status:</b> Submitted to <i>Foundations of Physics</i> | Built with ⚙️ & 🐍
 </div>
