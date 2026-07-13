@@ -11,14 +11,6 @@ Official code repository and supplementary material for the paper **"Galois Inva
 
 ---
 
-> 🌌 **El Universo Aritmético / The Arithmetic Universe** >
-
-> 🇬🇧 *This research is part of the theoretical framework of **The Arithmetic Universe**, the theory which postulates that fundamental reality is not hidden in infinite chaos, but in the elegant and humble architecture of integers.* > 🔗 **[Discover the central repository, the interactive notebooks, and the Lean 4 validation here](https://github.com/NachoPeinador/EL_UNIVERSO_ARITMETICO)**.
->
-> 🇪🇸 *Esta investigación forma parte del marco teórico de **El Universo Aritmético**, la teoría que postula que la realidad fundamental no se esconde en el caos infinito, sino en la elegante y humilde arquitectura de los números enteros.* > 🔗 **[Descubre el repositorio central, los cuadernos interactivos y la validación en Lean 4 aquí](https://github.com/NachoPeinador/EL_UNIVERSO_ARITMETICO)**.
-
----
-
 ## 🎯 TL;DR – The Essentials
 
 ### 🔬 **Theoretical & Computational Breakthroughs**
@@ -145,3 +137,12 @@ The engine and the theoretical framework were crafted outside traditional academ
 <div align="center">
 <b>Last Update:</b> May 2026 | <b>Status:</b> Submitted to <i>Journal of Cryptographic Engineering</i> | Built with ⚙️ & 🐍
 </div>
+
+---
+
+> 🌌 **El Universo Aritmético / The Arithmetic Universe** >
+
+> 🇬🇧 *This research is part of the theoretical framework of **The Arithmetic Universe**, the theory which postulates that fundamental reality is not hidden in infinite chaos, but in the elegant and humble architecture of integers.* > 🔗 **[Discover the central repository, the interactive notebooks, and the Lean 4 validation here](https://github.com/NachoPeinador/EL_UNIVERSO_ARITMETICO)**.
+>
+> 🇪🇸 *Esta investigación forma parte del marco teórico de **El Universo Aritmético**, la teoría que postula que la realidad fundamental no se esconde en el caos infinito, sino en la elegante y humilde arquitectura de los números enteros.* > 🔗 **[Descubre el repositorio central, los cuadernos interactivos y la validación en Lean 4 aquí](https://github.com/NachoPeinador/EL_UNIVERSO_ARITMETICO)**.
+
