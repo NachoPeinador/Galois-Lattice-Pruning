@@ -2,7 +2,7 @@
 
 [![C++](https://img.shields.io/badge/C++-OpenMP-00599C.svg)]()
 [![Python](https://img.shields.io/badge/Python-3.x-3776AB.svg)]()
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19920083.svg)](https://doi.org/10.5281/zenodo.19920083)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19920082.svg)](https://doi.org/10.5281/zenodo.19920082)
 [![ORCID](https://img.shields.io/badge/ORCID-0009--0008--1822--3452-A6CE39?style=flat&logo=orcid&logoColor=white)](https://orcid.org/0009-0008-1822-3452)
 [![X](https://img.shields.io/badge/X-%40todos__lumpen-000000?style=flat&logo=x&logoColor=white)](https://twitter.com/todos_lumpen)
 [![Papers](https://img.shields.io/badge/Paper-Read_PDF-B31B1B?style=flat&logo=latex&logoColor=white)](https://github.com/NachoPeinador/Galois-Lattice-Pruning/blob/main/Paper/Galois_Invariants_in_Cyclotomic_Lattice_Enumeration.pdf)
